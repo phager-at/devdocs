@@ -77,10 +77,12 @@ Once your `messages.php` is complete you need to increase the version number of 
 
 ### Setting defaults
 
+<Since versions={["4.0"]} />
+
 ```php title="The default processor can be set using an element of the array"
 'mynotification' => [
     'defaults' => [
-        'pop-up' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_LOGGEDIN + MESSAGE_DEFAULT_LOGGEDOFF,
+        'pop-up' => MESSAGE_PERMITTED + MESSAGE_DEFAULT_ENABLED,
         'email' => MESSAGE_PERMITTED,
     ],
 ],
@@ -93,8 +95,8 @@ The possible values are recorded in the lib.php file of messaging
 /**
  * Define contants for messaging default settings population. For unambiguity of
  * plugin developer intentions we use 4-bit value (LSB numbering):
- * bit 0 - whether to send message when user is loggedin (MESSAGE_DEFAULT_LOGGEDIN)
- * bit 1 - whether to send message when user is loggedoff (MESSAGE_DEFAULT_LOGGEDOFF)
+ * bit 0 - whether to send messages (MESSAGE_DEFAULT_ENABLED)
+ * bit 1 - Deprecated since 4.0; unused since 4.5
  * bit 2..3 - messaging permission (MESSAGE_DISALLOWED|MESSAGE_PERMITTED|MESSAGE_FORCED)
  *
  * MESSAGE_PERMITTED_MASK contains the mask we use to distinguish permission setting
@@ -102,6 +104,23 @@ The possible values are recorded in the lib.php file of messaging
 ```
 
 Note that if you change the values in message.php and then upgrade the plugin the values will not automatically be changed in the `config_plugins` table where they are stored.
+
+#### Moodle Versions older than 4.5
+
+Before Moodle 4.5 Moodle differentiated between default value for users who are logged in or logged off.
+Those were deprecated in Moodle 4.0.
+
+```php
+/**
+ * Define contants for messaging default settings population. For unambiguity of
+ * plugin developer intentions we use 4-bit value (LSB numbering):
+ * bit 0 - whether to send message (MESSAGE_DEFAULT_ENABLED)
+ * bit 1 - Deprecated: whether to send message (MESSAGE_DEFAULT_LOGGEDOFF). Used to mean only when the user is logged off.
+ * bit 2..3 - messaging permission (MESSAGE_DISALLOWED|MESSAGE_PERMITTED|MESSAGE_FORCED)
+ *
+ * MESSAGE_PERMITTED_MASK contains the mask we use to distinguish permission setting.
+ */
+```
 
 ### How to send a message
 
